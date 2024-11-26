@@ -20,29 +20,28 @@ def client():
             db.create_all()
         yield client  # Proporcionar el cliente para las pruebas
 
-
-def test_post_task(client):
+def test_get_task_by_id(client):
     """
-    Prueba el endpoint POST /tasks/:
-    - Verifica que se pueda crear una tarea correctamente.
-    - Verifica que los datos de la respuesta coincidan con los enviados.
+    Prueba el endpoint GET /tasks/<id>:
+    - Verifica que se pueda obtener una tarea específica por su ID.
     """
-    # Datos para crear una nueva tarea
+    
     nueva_tarea = {
-        "titulo": "Tarea de prueba",
-        "descripcion": "Descripción de prueba",
+        "titulo": "Tarea específica",
+        "descripcion": "Descripción específica",
         "estado": "pendiente"
     }
 
-    # Simula una solicitud POST al endpoint
-    response = client.post("/tasks/", json=nueva_tarea)
     
-    # Verifica que el código de estado sea 201 (Creado)
-    assert response.status_code == 201
+    post_response = client.post("/tasks/", json=nueva_tarea)
+    assert post_response.status_code == 201  
+    task_id = post_response.json["id_tarea"]  
 
-    # Verifica que los datos de la respuesta coincidan con los enviados
-    response_json = response.json
+    
+    get_response = client.get(f"/tasks/{task_id}")
+    assert get_response.status_code == 200  
+
+    response_json = get_response.json
     assert response_json["titulo"] == nueva_tarea["titulo"]
     assert response_json["descripcion"] == nueva_tarea["descripcion"]
     assert response_json["estado"] == nueva_tarea["estado"]
-
