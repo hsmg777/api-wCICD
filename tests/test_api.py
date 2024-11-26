@@ -20,15 +20,16 @@ def client():
             db.create_all()
         yield client  # Proporcionar el cliente para las pruebas
 
-def test_get_task_by_id(client):
+def test_delete_task(client):
     """
-    Prueba el endpoint GET /tasks/<id>:
-    - Verifica que se pueda obtener una tarea específica por su ID.
+    Prueba el endpoint DELETE /tasks/<id>:
+    - Verifica que se pueda eliminar una tarea específica por su ID.
+    - Verifica que la tarea ya no exista después de ser eliminada.
     """
     
     nueva_tarea = {
-        "titulo": "Tarea específica",
-        "descripcion": "Descripción específica",
+        "titulo": "Tarea para eliminar",
+        "descripcion": "Descripción para eliminar",
         "estado": "pendiente"
     }
 
@@ -37,11 +38,9 @@ def test_get_task_by_id(client):
     assert post_response.status_code == 201  
     task_id = post_response.json["id_tarea"]  
 
+    delete_response = client.delete(f"/tasks/{task_id}")
+    assert delete_response.status_code == 200  
+
     
     get_response = client.get(f"/tasks/{task_id}")
-    assert get_response.status_code == 200  
-
-    response_json = get_response.json
-    assert response_json["titulo"] == nueva_tarea["titulo"]
-    assert response_json["descripcion"] == nueva_tarea["descripcion"]
-    assert response_json["estado"] == nueva_tarea["estado"]
+    assert get_response.status_code == 404 
