@@ -1,3 +1,11 @@
+from flask import Flask  # Esta línea es necesaria para definir la aplicación Flask
+from flask_smorest import Api
+from flask_cors import CORS
+from controllers.Tarea import blp as TareaBluePrint  # Importa el blueprint correcto
+from db import init_db, db
+import urllib.parse
+
+
 def createApp(testing=False):
     app = Flask(__name__)
     
