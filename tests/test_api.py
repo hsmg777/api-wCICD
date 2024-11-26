@@ -20,15 +20,14 @@ def client():
             db.create_all()
         yield client  # Proporcionar el cliente para las pruebas
 
+
 def test_get_all_tasks(client):
     """
-    Prueba el endpoint GET /tasks/
+    Prueba el endpoint GET /tasks/:
+    - Verifica que inicialmente devuelve una lista vacía.
     """
-    # Simula una solicitud al endpoint
+    # Simula una solicitud inicial al endpoint
     response = client.get("/tasks/")
-    
-    # Verifica que el código de estado sea 200
-    assert response.status_code == 200
-
-    # Verifica que el cuerpo de la respuesta sea una lista (puede estar vacía)
-    assert isinstance(response.json, list)
+    assert response.status_code == 200  # Verifica el código de estado
+    assert isinstance(response.json, list)  # Verifica que es una lista
+    assert len(response.json) == 0  # Inicialmente, la lista debería estar vacía
