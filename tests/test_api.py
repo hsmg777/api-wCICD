@@ -21,13 +21,28 @@ def client():
         yield client  # Proporcionar el cliente para las pruebas
 
 
-def test_get_all_tasks(client):
+def test_post_task(client):
     """
-    Prueba el endpoint GET /tasks/:
-    - Verifica que inicialmente devuelve una lista vacía.
+    Prueba el endpoint POST /tasks/:
+    - Verifica que se pueda crear una tarea correctamente.
+    - Verifica que los datos de la respuesta coincidan con los enviados.
     """
-    # Simula una solicitud inicial al endpoint
-    response = client.get("/tasks/")
-    assert response.status_code == 200  # Verifica el código de estado
-    assert isinstance(response.json, list)  # Verifica que es una lista
-    assert len(response.json) == 0  # Inicialmente, la lista debería estar vacía
+    # Datos para crear una nueva tarea
+    nueva_tarea = {
+        "titulo": "Tarea de prueba",
+        "descripcion": "Descripción de prueba",
+        "estado": "pendiente"
+    }
+
+    # Simula una solicitud POST al endpoint
+    response = client.post("/tasks/", json=nueva_tarea)
+    
+    # Verifica que el código de estado sea 201 (Creado)
+    assert response.status_code == 201
+
+    # Verifica que los datos de la respuesta coincidan con los enviados
+    response_json = response.json
+    assert response_json["titulo"] == nueva_tarea["titulo"]
+    assert response_json["descripcion"] == nueva_tarea["descripcion"]
+    assert response_json["estado"] == nueva_tarea["estado"]
+
