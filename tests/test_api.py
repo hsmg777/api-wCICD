@@ -20,27 +20,39 @@ def client():
             db.create_all()
         yield client  # Proporcionar el cliente para las pruebas
 
-def test_delete_task(client):
+def test_update_task(client):
     """
-    Prueba el endpoint DELETE /tasks/<id>:
-    - Verifica que se pueda eliminar una tarea específica por su ID.
-    - Verifica que la tarea ya no exista después de ser eliminada.
+    Prueba el endpoint PUT /tasks/<id>:
+    - Verifica que se pueda actualizar una tarea específica por su ID.
+    - Verifica que los datos actualizados se reflejen correctamente.
     """
-    
+
     nueva_tarea = {
-        "titulo": "Tarea para eliminar",
-        "descripcion": "Descripción para eliminar",
+        "titulo": "Tarea original",
+        "descripcion": "Descripción original",
         "estado": "pendiente"
     }
 
-    
     post_response = client.post("/tasks/", json=nueva_tarea)
     assert post_response.status_code == 201  
     task_id = post_response.json["id_tarea"]  
 
-    delete_response = client.delete(f"/tasks/{task_id}")
-    assert delete_response.status_code == 200  
+    datos_actualizados = {
+        "titulo": "Tarea actualizada",
+        "descripcion": "Descripción actualizada",
+        "estado": "completada"
+    }
 
-    
+    put_response = client.put(f"/tasks/{task_id}", json=datos_actualizados)
+    assert put_response.status_code == 200  
+
+    response_json = put_response.json
+    assert response_json["titulo"] == datos_actualizados["titulo"]
+    assert response_json["descripcion"] == datos_actualizados["descripcion"]
+    assert response_json["estado"] == datos_actualizados["estado"]
+
     get_response = client.get(f"/tasks/{task_id}")
-    assert get_response.status_code == 404 
+    assert get_response.status_code == 200
+    assert get_response.json["titulo"] == datos_actualizados["titulo"]
+    assert get_response.json["descripcion"] == datos_actualizados["descripcion"]
+    assert get_response.json["estado"] == datos_actualizados["estado"]
