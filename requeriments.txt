@@ -1,0 +1,9 @@
+flask
+flask-smorest
+flask-cors
+flask-sqlalchemy
+marshmallow
+marshmallow-sqlalchemy
+pytest
+pyodbc
+sqlalchemy
