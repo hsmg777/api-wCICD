@@ -2,7 +2,6 @@ from flask_smorest import Blueprint
 from flask import jsonify
 from models.Tarea import Tarea, db
 from schemas.TareaSchema import TareaSchema
-
 blp = Blueprint("tareas", __name__, url_prefix="/tasks", description="Operaciones CRUD para tareas")
 
 tarea_schema = TareaSchema()
