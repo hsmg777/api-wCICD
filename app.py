@@ -5,7 +5,6 @@ from controllers.Tarea import blp as TareaBluePrint  # Importa el blueprint corr
 from db import init_db, db
 import urllib.parse
 
-
 def createApp(testing=False):
     app = Flask(__name__)
     
@@ -51,3 +50,10 @@ def createApp(testing=False):
     api.register_blueprint(TareaBluePrint)
    
     return app
+
+if __name__ == "__main__":
+    # Crea la aplicación
+    app = createApp()
+    
+    # Ejecuta la aplicación Flask
+    app.run(host="0.0.0.0", port=5000, debug=True)
